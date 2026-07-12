@@ -99,6 +99,10 @@ function getLocCountByRateMap() {
         })
 }
 
+function getLocCountByLastUpdateMap() {
+
+}
+
 function setSortBy(sortBy = {}) {
     gSortBy = sortBy
 }
