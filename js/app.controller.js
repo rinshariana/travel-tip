@@ -40,7 +40,6 @@ function renderLocs(locs) {
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
         const distance = gUserPos? (utilService.getDistance(gUserPos, {lat: loc.geo.lat, lng: loc.geo.lng})).toLocaleString() + ' km from you' : ''
-        console.log('user', gUserPos, 'dist', distance)
 
         return `
         <li class="loc ${className}" data-id="${loc.id}">
