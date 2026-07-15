@@ -2,6 +2,8 @@ import { utilService } from './services/util.service.js'
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
+var gUserPos
+
 window.onload = onInit
 
 // To make things easier in this project structure 
@@ -37,6 +39,9 @@ function renderLocs(locs) {
 
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
+        const distance = gUserPos? (utilService.getDistance(gUserPos, {lat: loc.geo.lat, lng: loc.geo.lng})).toLocaleString() + ' km from you' : ''
+        console.log('user', gUserPos, 'dist', distance)
+
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
@@ -49,6 +54,7 @@ function renderLocs(locs) {
                 ` | Updated: ${utilService.elapsedTime(loc.updatedAt)}`
                 : ''}
             </p>
+            <p class="muted distance">${distance}</p>
             <div class="loc-btns">     
                <button title="Delete" onclick="app.onRemoveLoc('${loc.id}')">🗑️</button>
                <button title="Edit" onclick="app.onUpdateLoc('${loc.id}')">✏️</button>
@@ -132,6 +138,7 @@ function loadAndRenderLocs() {
 function onPanToUserPos() {
     mapService.getUserPosition()
         .then(latLng => {
+            gUserPos = latLng
             mapService.panTo({ ...latLng, zoom: 15 })
             unDisplayLoc()
             loadAndRenderLocs()
