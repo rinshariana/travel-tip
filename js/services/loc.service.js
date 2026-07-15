@@ -40,7 +40,7 @@ function query() {
             console.log(locs)
             if (gFilterBy.txt) {
                 const regex = new RegExp(gFilterBy.txt, 'i')
-                locs = locs.filter(loc => regex.test(loc.name))
+                locs = locs.filter(loc => regex.test(loc.name) || regex.test(loc.geo.address))
             }
             if (gFilterBy.minRate) {
                 locs = locs.filter(loc => loc.rate >= gFilterBy.minRate)
@@ -52,6 +52,12 @@ function query() {
                 locs = locs.slice(startIdx, startIdx + PAGE_SIZE)
             }
 
+            if (gSortBy.rate !== undefined) {
+                locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
+            }
+            if (gSortBy.createdAt !== undefined) {
+                locs.sort((p1, p2) => (p1.createdAt - p2.createdAt) * gSortBy.createdAt)
+            }
             if (gSortBy.rate !== undefined) {
                 locs.sort((p1, p2) => (p1.rate - p2.rate) * gSortBy.rate)
             } else if (gSortBy.name !== undefined) {
@@ -121,6 +127,7 @@ function getLocCountByLastUpdateMap() {
 }
 
 function setSortBy(sortBy = {}) {
+    console.log(sortBy)
     gSortBy = sortBy
 }
 
