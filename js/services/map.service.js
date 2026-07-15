@@ -45,12 +45,11 @@ function lookupAddressGeo(geoOrAddress) {
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}`
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452`
 
-    var url = `https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&`
-    url += (geoOrAddress.lat) ? `latlng=${geoOrAddress.lat},${geoOrAddress.lng}` :
-        `address=${geoOrAddress}`
+    console.log(geoOrAddress)
+    const geocoder = new google.maps.Geocoder()
+    const param = (geoOrAddress.lat) ? {location: { lat: geoOrAddress.lat, lng: geoOrAddress.lng }} : { address: geoOrAddress }
 
-    return fetch(url)
-        .then(res => res.json())
+    return geocoder.geocode(param)
         .then(res => {
             // console.log('RES IS', res)
             if (!res.results.length) return new Error('Found nothing')
@@ -59,8 +58,8 @@ function lookupAddressGeo(geoOrAddress) {
 
             const geo = {
                 address: formatted_address.substring(formatted_address.indexOf(' ')).trim(),
-                lat: geometry.location.lat,
-                lng: geometry.location.lng,
+                lat: geometry.location.lat(),
+                lng: geometry.location.lng(),
                 zoom: gMap.getZoom()
             }
             // console.log('GEO IS', geo)

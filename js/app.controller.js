@@ -69,7 +69,12 @@ function renderLocs(locs) {
 }
 
 function onRemoveLoc(locId) {
-    locService.remove(locId)
+    locService.getById(locId)
+        .then(res => confirm(`Will remove ${res.name}. Are you sure?`))
+        .then(userRes => {
+            if (!userRes) return
+        })
+        .then(() => locService.remove(locId))
         .then(() => {
             flashMsg('Location removed')
             unDisplayLoc()
@@ -168,7 +173,6 @@ function onSelectLoc(locId) {
 }
 
 function displayLoc(loc) {
-    console.log(loc)
     document.querySelector('.loc.active')?.classList?.remove('active')
     document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
 
